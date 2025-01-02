@@ -37,23 +37,14 @@ export const loginUser = async (req, res) => {
     const { username, password } = req.body;
 
     try {
-        console.log('Login attempt with:', { username, password });
-
         let user = await Student.findOne({ username }) || await Staff.findOne({ username });
-        console.log('User found:', user);
-
         if (!user) {
             return res.status(400).json({ error: 'User not found' });
         }
-
-        console.log('Password from request:', password);
-        console.log('Hashed password from DB:', user.password);
-
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(400).json({ error: 'Invalid password' });
         }
-
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '10m' });
         res.status(200).json({ token });
     } catch (err) {
