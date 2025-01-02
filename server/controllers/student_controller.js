@@ -4,15 +4,12 @@ import Course from '../models/course.js';
 export const enrollInCourse = async (req, res) => {
     const studentId = req.user.id;
     const { course_id } = req.params;
-    console.log('Course:', course_id);
-
     try {
         const student = await Student.findById(studentId);
         if (!student) {
             return res.status(404).json({ error: 'Student not found' });
         }
         const course = await Course.findOne({ _id: course_id });
-        console.log('Course not found in DB:', course_id);
         if (!course) {
             return res.status(404).json({ error: 'Course not found' });
         }

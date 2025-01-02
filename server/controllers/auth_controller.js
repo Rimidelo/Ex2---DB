@@ -4,18 +4,28 @@ import Student from '../models/student.js';
 import Staff from '../models/staff.js';
 
 export const registerUser = async (req, res) => {
-    const { name, address, password, role } = req.body;
+    const { name, address, password, role, yearOfLearning } = req.body;
 
     try {
-        const hashedPassword = await bcrypt.hash(password, 10);
+        if (!name || !address || !password || !role) {
+            return res.status(400).json({ error: 'Name, address, password, and role are required' });
+        }
 
         if (role === 'student') {
-            const newStudent = new Student({ name, address, password: hashedPassword });
+            if (!yearOfLearning) {
+                return res.status(400).json({ error: 'Year of learning is required for students' });
+            }
+
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const newStudent = new Student({ name, address, password: hashedPassword, yearOfLearning });
             await newStudent.save();
+
             return res.status(201).json({ message: 'Student registered successfully' });
         } else if (role === 'staff') {
-            const newStaff = new Staff({ name, address, password: hashedPassword }); // Hash the password
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const newStaff = new Staff({ name, address, password: hashedPassword });
             await newStaff.save();
+
             return res.status(201).json({ message: 'Staff registered successfully' });
         } else {
             return res.status(400).json({ error: 'Invalid role specified' });
@@ -25,6 +35,7 @@ export const registerUser = async (req, res) => {
         res.status(500).json({ error: 'Server error during registration' });
     }
 };
+
 
 
 export const loginUser = async (req, res) => {
