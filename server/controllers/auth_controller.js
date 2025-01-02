@@ -4,24 +4,22 @@ import Student from '../models/student.js';
 import Staff from '../models/staff.js';
 
 export const registerUser = async (req, res) => {
-    const { name, address, password, role, yearOfLearning } = req.body;
+    const { username, name, address, password, role, yearOfLearning } = req.body;
 
     try {
+        if (!username) {
+            return res.status(400).json({ error: 'Username is required' });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         if (role === 'student') {
-            if (!yearOfLearning) {
-                return res.status(400).json({ error: 'Year of learning is required for students' });
-            }
-
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const newStudent = new Student({ name, address, password: hashedPassword, yearOfLearning });
+            const newStudent = new Student({ username, name, address, password: hashedPassword, yearOfLearning });
             await newStudent.save();
-
             return res.status(201).json({ message: 'Student registered successfully' });
         } else if (role === 'staff') {
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const newStaff = new Staff({ name, address, password: hashedPassword });
+            const newStaff = new Staff({ username, name, address, password: hashedPassword });
             await newStaff.save();
-
             return res.status(201).json({ message: 'Staff registered successfully' });
         } else {
             return res.status(400).json({ error: 'Invalid role specified' });
@@ -34,29 +32,29 @@ export const registerUser = async (req, res) => {
 
 
 
+
 export const loginUser = async (req, res) => {
-    const { name, password, role } = req.body;
+    const { username, password } = req.body;
 
     try {
-        let user;
-        if (role === 'student') {
-            user = await Student.findOne({ name });
-        } else if (role === 'staff') {
-            user = await Staff.findOne({ name });
-        } else {
-            return res.status(400).json({ error: 'Invalid role specified' });
-        }
+        console.log('Login attempt with:', { username, password });
+
+        let user = await Student.findOne({ username }) || await Staff.findOne({ username });
+        console.log('User found:', user);
 
         if (!user) {
             return res.status(400).json({ error: 'User not found' });
         }
+
+        console.log('Password from request:', password);
+        console.log('Hashed password from DB:', user.password);
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(400).json({ error: 'Invalid password' });
         }
 
-        const token = jwt.sign({ id: user._id, role }, process.env.JWT_SECRET, { expiresIn: '10m' });
+        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '10m' });
         res.status(200).json({ token });
     } catch (err) {
         console.error('Error during login:', err);
