@@ -10,6 +10,9 @@ export const createCourse = async (req, res) => {
         res.status(201).json({ message: 'Course created successfully' });
     } catch (err) {
         console.error('Error creating course:', err);
+        if (err.name === 'ValidationError') {
+            return res.status(400).json({ error: err.message });
+        }
         res.status(500).json({ error: 'Server error while creating course' });
     }
 };

@@ -7,10 +7,6 @@ export const registerUser = async (req, res) => {
     const { name, address, password, role, yearOfLearning } = req.body;
 
     try {
-        if (!name || !address || !password || !role) {
-            return res.status(400).json({ error: 'Name, address, password, and role are required' });
-        }
-
         if (role === 'student') {
             if (!yearOfLearning) {
                 return res.status(400).json({ error: 'Year of learning is required for students' });
