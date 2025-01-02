@@ -14,7 +14,7 @@ export const registerUser = async (req, res) => {
             await newStudent.save();
             return res.status(201).json({ message: 'Student registered successfully' });
         } else if (role === 'staff') {
-            const newStaff = new Staff({ name, address });
+            const newStaff = new Staff({ name, address, password: hashedPassword }); // Hash the password
             await newStaff.save();
             return res.status(201).json({ message: 'Staff registered successfully' });
         } else {
@@ -25,6 +25,7 @@ export const registerUser = async (req, res) => {
         res.status(500).json({ error: 'Server error during registration' });
     }
 };
+
 
 export const loginUser = async (req, res) => {
     const { name, password, role } = req.body;
@@ -43,18 +44,15 @@ export const loginUser = async (req, res) => {
             return res.status(400).json({ error: 'User not found' });
         }
 
-        if (role === 'student') {
-            const isPasswordValid = await bcrypt.compare(password, user.password);
-            if (!isPasswordValid) {
-                return res.status(400).json({ error: 'Invalid password' });
-            }
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(400).json({ error: 'Invalid password' });
         }
 
         const token = jwt.sign({ id: user._id, role }, process.env.JWT_SECRET, { expiresIn: '10m' });
         res.status(200).json({ token });
     } catch (err) {
-        console.error('Error during registration:', err);
-        res.status(500).json({ error: 'Server error during registration' });
+        console.error('Error during login:', err);
+        res.status(500).json({ error: 'Server error during login' });
     }
 };
-

@@ -11,7 +11,7 @@ export const enrollInCourse = async (req, res) => {
             return res.status(404).json({ error: 'Student not found' });
         }
 
-        const course = await Course.findById(course_id);
+        const course = await Course.findOne({ _id: course_id });
         if (!course) {
             return res.status(404).json({ error: 'Course not found' });
         }
@@ -23,7 +23,6 @@ export const enrollInCourse = async (req, res) => {
         if (student.courses.includes(course_id)) {
             return res.status(400).json({ error: 'Student is already enrolled in this course' });
         }
-
 
         const totalCredits = student.numOfPoints + course.creditPoints;
         if (totalCredits > 20) {
@@ -38,7 +37,6 @@ export const enrollInCourse = async (req, res) => {
 
         await student.save();
         await course.save();
-
 
         res.status(200).json({ message: 'Student successfully enrolled in the course', student });
     } catch (err) {
