@@ -10,6 +10,6 @@ router.get('/', authenticateToken, authorizeRole(['staff']), getCourses);
 router.put('/:id', authenticateToken, authorizeRole(['staff']), updateCourse);
 router.delete('/:id', authenticateToken, authorizeRole(['staff']), deleteCourse);
 
-router.post('/:id', authenticateToken, authorizeRole(['student']), enrollInCourse);
+router.post('/:course_id', authenticateToken, authorizeRole(['student']), enrollInCourse);
 
 export default router;
