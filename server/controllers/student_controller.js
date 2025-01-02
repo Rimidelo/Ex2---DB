@@ -42,3 +42,36 @@ export const enrollInCourse = async (req, res) => {
         res.status(500).json({ error: 'Server error during enrollment' });
     }
 };
+
+export const dropFromCourse = async (req, res) => {
+    const studentId = req.user.id;
+    const { course_id } = req.params;
+
+    try {
+        const student = await Student.findById(studentId);
+        const course = await Course.findById(course_id);
+
+        if (!student || !course) {
+            return res.status(404).json({ error: 'Student or course not found' });
+        }
+
+        if (!student.courses.includes(course_id)) {
+            return res.status(400).json({ error: 'Student is not enrolled in this course' });
+        }
+
+        student.courses.pull(course_id);
+        student.numOfPoints -= course.creditPoints;
+
+        course.studentsList.pull(studentId);
+        course.numOfStudents -= 1;
+
+        await student.save();
+        await course.save();
+
+        res.status(200).json({ message: 'Successfully unenrolled from the course' });
+    } catch (err) {
+        console.error('Error during unenrollment:', err);
+        res.status(500).json({ error: 'Server error during unenrollment' });
+    }
+};
+
