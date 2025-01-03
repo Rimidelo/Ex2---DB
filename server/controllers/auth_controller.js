@@ -33,7 +33,11 @@ export const registerUser = async (req, res) => {
             return res.status(400).json({ error: 'Invalid role specified' });
         }
     } catch (err) {
-        logger.error(`Error during registration: ${err.message}`);
+        if (err.name === 'ValidationError') {
+            logger.warn(`Validation error during registration: ${err.message}`);
+            return res.status(400).json({ error: err.message });
+        }
+        logger.error(`Error during registration: ${err}`);
         res.status(500).json({ error: 'Server error during registration' });
     }
 };
