@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import logger from './logger';
+import logger from './logger.js';
 
 export const authenticateToken = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
