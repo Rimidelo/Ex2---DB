@@ -73,7 +73,7 @@ export const updateCourse = async (req, res) => {
         res.status(200).json({ message: 'Course updated successfully', updatedCourse });
     } catch (err) {
         logger.error(`Error updating course: ${err.message}`);
-        res.status(500).json({ error: 'Server error while updating course' });
+        res.status(500).json({ error: `Error updating course: ${err.message}`});
     }
 };
 
