@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const courseSchema = new mongoose.Schema({
     courseName: { type: String, required: [true, 'Course name is required'] },
-    instructorName: { type: String, required: [true, 'Instructor name is required'] },
+    instructorName: { type: String, required: false },
     creditPoints: { type: Number, required: true, min: [3, 'Must be at least 3 credits'], max: [5, 'Cannot exceed 5 credits'] },
     maxStudents: { type: Number, required: true, default: 30 },
     numOfStudents: {

@@ -24,13 +24,11 @@ mongoose.connect(process.env.DB_HOST)
     });
 
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
-// Routes
 app.use('/api/auth', authRoutes);
 // app.use('/api/students', studentRoutes);
 // app.use('/api/staff', staffRoutes);
@@ -47,7 +45,6 @@ app.get('/', (req, res) => {
     res.status(200).send('Welcome to the API');
 });
 
-// Start the server
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

@@ -7,10 +7,10 @@ export const registerUser = async (req, res) => {
     const { username, name, address, password, role, yearOfLearning } = req.body;
 
     try {
-        if (!username) {
-            return res.status(400).json({ error: 'Username is required' });
+        const existingUser = await Student.findOne({ username }) || await Staff.findOne({ username });
+        if (existingUser) {
+            return res.status(400).json({ error: 'Username is already taken' });
         }
-
         const hashedPassword = await bcrypt.hash(password, 10);
 
         if (role === 'student') {

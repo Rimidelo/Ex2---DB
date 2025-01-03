@@ -81,7 +81,6 @@ export const getSingleCourse = async (req, res) => {
         if (!course) {
             return res.status(404).json({ error: 'Course not found' });
         }
-
         if (userRole === 'staff') {
             return res.status(200).json(course);
         } else if (userRole === 'student') {
