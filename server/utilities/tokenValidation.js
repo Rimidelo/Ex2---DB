@@ -20,7 +20,7 @@ export const authenticateToken = (req, res, next) => {
 export const authorizeRole = (roles) => (req, res, next) => {
   if (!roles.includes(req.user.role)) {
     logger.warn(`Access denied: ${req.user.role} is not authorized to access this resource`);
-    return res.status(403).json({ error: 'Access denied' });
+    return res.status(403).json({ error: `Access denied: ${req.user.role} is not authorized to access this`});
   }
   next();
 };
