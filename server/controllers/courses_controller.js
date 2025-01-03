@@ -56,6 +56,11 @@ export const updateCourse = async (req, res) => {
 
     logger.info(`Update course attempt: courseId=${id}, updateData=${JSON.stringify(updateData)}`);
 
+    if (!mongoose.isValidObjectId(id)) {
+        logger.warn(`Invalid course ID: ${id}`);
+        return res.status(400).json({ error: 'Invalid course ID' });
+    }
+
     try {
         const updatedCourse = await Course.findByIdAndUpdate(id, updateData, { new: true });
         if (!updatedCourse) {

@@ -3,7 +3,7 @@ const courseSchema = new mongoose.Schema({
     courseName: { type: String, required: [true, 'Course name is required'] },
     instructorName: { type: String, required: false },
     creditPoints: { type: Number, required: true, min: [3, 'Must be at least 3 credits'], max: [5, 'Cannot exceed 5 credits'] },
-    maxStudents: { type: Number, required: true, default: 30 },
+    maxStudents: { type: Number, required: true, default: 30,min: [2, 'Must be at least 2 students'] },
     numOfStudents: {
         type: Number,
         default: 0,
