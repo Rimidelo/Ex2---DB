@@ -1,6 +1,8 @@
 import Course from '../models/course.js';
 import Student from '../models/student.js';
 import logger from '../utilities/logger.js';
+import mongoose from 'mongoose';
+
 
 export const createCourse = async (req, res) => {
     const { courseName, instructorName, creditPoints, maxStudents, lastDateRegistration } = req.body;
