@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticateToken, authorizeRole } from '../middleware/tokenValidation.js';
+import { authenticateToken, authorizeRole } from '../utilities/tokenValidation.js';
 import {
     createCourse,
     getCourses,
