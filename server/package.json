@@ -1,5 +1,5 @@
 {
-  "name": "tigbur2",
+  "name": "ex2-db",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
@@ -8,7 +8,7 @@
     "dev": "nodemon index.js"
   },
   "keywords": [],
-  "author": "Keren",
+  "author": "vlad",
   "license": "ISC",
   "description": "",
   "dependencies": {

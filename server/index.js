@@ -5,8 +5,7 @@ import cors from 'cors';
 import morgan from 'morgan';
 
 import authRoutes from './routers/auth_routes.js';
-// import studentRoutes from './routers/student_routes.js';
-// import staffRoutes from './routers/staff_routes.js';
+import studentRoutes from './routers/student_routes.js';
 import courseRoutes from './routers/courses_routes.js';
 
 dotenv.config();
@@ -30,8 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
 
 app.use('/api/auth', authRoutes);
-// app.use('/api/students', studentRoutes);
-// app.use('/api/staff', staffRoutes);
+app.use('/api/students', studentRoutes);
 app.use('/api/courses', courseRoutes);
 
 
