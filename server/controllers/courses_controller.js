@@ -31,7 +31,10 @@ export const getCourses = async (req, res) => {
 
     try {
         if (userRole === 'staff') {
-            const courses = await Course.find();
+            const courses = await Course.find().populate({
+                path: 'studentsList',
+                select: 'name' // Fetch only the fields you need
+            });
             logger.info(`Courses fetched for staff: totalCourses=${courses.length}`);
             return res.status(200).json(courses);
         } else if (userRole === 'student') {
