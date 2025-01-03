@@ -43,12 +43,14 @@ export const registerUser = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password} = req.body;
 
     logger.info(`Login attempt: username=${username}`);
 
     try {
-        const user = await Student.findOne({ username }) || await Staff.findOne({ username });
+        let user = await Student.findOne({ username });
+        let role = 'student';
+        if (!user) {user = await Staff.findOne({ username });role = 'staff';}
         if (!user) {
             logger.warn(`Login failed: User not found (username=${username})`);
             return res.status(400).json({ error: 'User not found' });
@@ -60,7 +62,7 @@ export const loginUser = async (req, res) => {
             return res.status(400).json({ error: 'Invalid password' });
         }
 
-        const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '10m' });
+        const token = jwt.sign({ id: user._id, role},process.env.JWT_SECRET,{ expiresIn: '10m' });
         logger.info(`Login successful: username=${username}`);
         res.status(200).json({ token });
     } catch (err) {
