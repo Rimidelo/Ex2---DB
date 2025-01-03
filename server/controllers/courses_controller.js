@@ -64,7 +64,7 @@ export const updateCourse = async (req, res) => {
     }
 
     try {
-        const updatedCourse = await Course.findByIdAndUpdate(id, updateData, { new: true });
+        const updatedCourse = await Course.findByIdAndUpdate(id, updateData, { new: true, runValidators: true });
         if (!updatedCourse) {
             logger.warn(`Course not found: courseId=${id}`);
             return res.status(404).json({ error: 'Course not found' });
