@@ -76,7 +76,7 @@ export const updateCourse = async (req, res) => {
         res.status(200).json({ message: 'Course updated successfully', updatedCourse });
     } catch (err) {
         logger.error(`Error updating course: ${err.message}`);
-        res.status(500).json({ error: `Error updating course: ${err.message}`});
+        res.status(500).json({ error: `Error updating course: ${err.message}` });
     }
 };
 
@@ -112,7 +112,10 @@ export const getSingleCourse = async (req, res) => {
     logger.info(`Fetching single course: courseId=${course_id}, userRole=${userRole}, userId=${userId}`);
 
     try {
-        const course = await Course.findById(course_id);
+        const courses = await Course.find().populate({
+            path: 'studentsList',
+            select: 'name'
+        });
         if (!course) {
             logger.warn(`Course not found: courseId=${course_id}`);
             return res.status(404).json({ error: 'Course not found' });
