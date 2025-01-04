@@ -21,6 +21,12 @@ export const enrollInCourse = async (req, res) => {
             return res.status(404).json({ error: 'Course not found' });
         }
 
+        const currentDate = new Date();
+        if (currentDate > course.lastDateRegistration) {
+            logger.warn(`Enrollment denied: Registration date has passed for courseId=${course_id}`);
+            return res.status(400).json({ error: 'Registration date has passed for this course' });
+        }
+
         if (course.numOfStudents >= course.maxStudents) {
             logger.warn(`Enrollment failed: Course is full (courseId=${course_id})`);
             return res.status(400).json({ error: 'Course is full' });
